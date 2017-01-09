@@ -126,3 +126,44 @@ JobDataMap -
                                             “0 30 10-13 ? * WED,FRI”
                     CronTrigger Example 4 - an expression to create a trigger that fires every half hour between the hours of 8 am and 10 am on the 5th and 20th of every month. Note that the trigger will NOT fire at 10:00 am, just at 8:00, 8:30, 9:00 and 9:30
                                             “0 0/30 8-9 5,20 * ?”
+
+              Trigger listeners and job listeners:
+                Listeners are the objects that you create to perform certain action on events in scheduler . Trigger listeners perform actions on trigger events and job listeners on job events.
+
+                Trigger related events :
+                    -> trigger firing , trigger mis-firing ,trigger completion
+                Job related events :
+                      -> job is about to be executed and job has completed execution
+
+            Scheduler Listener :
+                  SchedulerListeners are much like TriggerListeners and JobListeners, except they receive notification of events within the Scheduler itself - not necessarily events related to a specific trigger or job.
+                  Scheduler-related events include: the addition of a job/trigger, the removal of a job/trigger, a serious error within the scheduler, notification of the scheduler being shutdown, and others.
+
+          JOB stores:
+            -> JobStore’s are responsible for keeping track of all the “work data” that you give to the scheduler: jobs, triggers, calendars, etc.
+            -> JobStore your scheduler should use (and it’s configuration settings) in the properties file
+
+            RAMJobStore:
+              -> RAMJobStore is the simplest JobStore to use, it is also the most performant (in terms of CPU time).
+              -> It keeps all the data in RAM.
+              -> The drawback is that when your application ends (or crashes) all of the scheduling information is lost - this means RAMJobStore cannot honor the setting of “non-volatility” on jobs and triggers.
+              -> Configuring Quartz to use RAMJobStore
+                 org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
+
+          JDBCJobStore:
+                  ->It keeps all of its data in a database via JDBC.
+                  ->JDBCJobStore works with nearly any database  Oracle, PostgreSQL, MySQL, MS SQLServer, HSQLDB, and DB2
+                  ->You can find table-creation SQL scripts in the “docs/dbTables” directory of the Quartz distribution.
+                  ->Tables start with the prefix “QRTZ_” (such as the tables “QRTZ_TRIGGERS”, and “QRTZ_JOB_DETAIL”).However its configurable
+
+                  Configuring JDBC stores
+                  -> To use JDBCJobStore (and assuming you’re using StdSchedulerFactory) you first need to set the JobStore class property of your Quartz configuration to be either org.quartz.impl.jdbcjobstore.JobStoreTX or org.quartz.impl.jdbcjobstore.JobStoreCMT
+                  ->Configuring Quartz to use JobStoreTx
+                                    org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+                  ->Configuring JDBCJobStore to use a DriverDelegate(responsible for all JDBC operation) there are different delegates for different databases check out
+                                    org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                  ->Configuring JDBCJobStore with the Table Prefix
+                                    org.quartz.jobStore.tablePrefix = QRTZ_
+                  ->Configuring JDBCJobStore with the name of the DataSource to use
+                                    org.quartz.jobStore.dataSource = myDS
+                  Note:- If your Scheduler is busy (i.e. nearly always executing the same number of jobs as the size of the thread pool, then you should probably set the number of connections in the DataSource to be the about the size of the thread pool + 2.
