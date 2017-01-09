@@ -167,3 +167,17 @@ JobDataMap -
                   ->Configuring JDBCJobStore with the name of the DataSource to use
                                     org.quartz.jobStore.dataSource = myDS
                   Note:- If your Scheduler is busy (i.e. nearly always executing the same number of jobs as the size of the thread pool, then you should probably set the number of connections in the DataSource to be the about the size of the thread pool + 2.
+
+      Configuration, Resource Usage and SchedulerFactory:
+        ->The architecture of Quartz is modular, and therefore to get it running several components need to be “snapped” together.
+        ->The major components that need to be configured before Quartz can do its work are:
+                            ThreadPool
+                            JobStore
+                            DataSources (if necessary)
+                            The Scheduler itself
+
+       ->The ThreadPool provides a set of Threads for Quartz to use when executing Jobs.The more threads in the pool, the greater number of Jobs that can run concurrently
+
+    Clustering:
+        Clustering currently works with the JDBC-Jobstore (JobStoreTX or JobStoreCMT) and the TerracottaJobStore. Features include load-balancing and job fail-over (if the JobDetail’s “request recovery” flag is set to true).
+       Each instance in the cluster should use the same copy of the quartz.properties file. Exceptions of this would be to use properties files that are identical, with the following allowable exceptions: Different thread pool size, and different value for the “org.quartz.scheduler.instanceId” property. Each node in the cluster MUST have a unique instanceId, which is easily done (without needing different properties files) by placing “AUTO” as the value of this property.
