@@ -181,3 +181,25 @@ JobDataMap -
     Clustering:
         Clustering currently works with the JDBC-Jobstore (JobStoreTX or JobStoreCMT) and the TerracottaJobStore. Features include load-balancing and job fail-over (if the JobDetail’s “request recovery” flag is set to true).
        Each instance in the cluster should use the same copy of the quartz.properties file. Exceptions of this would be to use properties files that are identical, with the following allowable exceptions: Different thread pool size, and different value for the “org.quartz.scheduler.instanceId” property. Each node in the cluster MUST have a unique instanceId, which is easily done (without needing different properties files) by placing “AUTO” as the value of this property.
+
+Configuration References:
+    ->Configuration of Quartz is typically done through the use of a properties file.
+    ->By default, StdSchedulerFactory load a properties file named “quartz.properties” from the ‘current working directory’. If that fails, then the “quartz.properties” file located (as a resource) in the org/quartz package is loaded. If you wish to use a file other than these defaults, you must define the system property ‘org.quartz.properties’ to point to the file you want.
+    ->Alternatively, you can explicitly initialize the factory by calling one of the initialize(xx) methods before calling getScheduler() on the StdSchedulerFactory.
+  ->List of Configurations
+      ->Main Configuration (configuration of primary scheduler settings, transactions)
+      ->Configuration of ThreadPool (tune resources for job execution)
+      ->Configuration of Listeners (your application can receive notification of scheduled events)
+      ->Configuration of Plug-Ins (add functionality to your scheduler)
+      ->Configuration of RMI(Remote Method Invocation) Server and Client (use a Quartz instance from a remote process)
+      ->Configuration of RAMJobStore (store jobs and triggers in memory)
+      ->Configuration of JDBC-JobStoreTX (store jobs and triggers in a database via JDBC)
+      ->Configuration of JDBC-JobStoreCMT (JDBC with JTA container-managed transactions)
+      ->Configuration of DataSources (for use by the JDBC-JobStores)
+      ->Configuration of Database Clustering (achieve fail-over and load-balancing with JDBC-JobStore)
+      ->Configuration of TerracottaJobStore (Clustering without a database!)
+
+
+Note:-  The Sql tables need to be imported first to your sql database
+		    and the sql-connector jar you use should be checked you will get some exception on SQL syntax.
+		    You can find the SQL schema in the downloads ->documents-> dbtables 

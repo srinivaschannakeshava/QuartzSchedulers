@@ -5,6 +5,12 @@
 	<artifactId>quartz</artifactId>
 	<version>1.0</version>
 	<name>QuartzScheduler</name>
+	<repositories>
+		<repository>
+			<id>michaelklishin</id>
+			<url>https://dl.bintray.com/michaelklishin/maven/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
@@ -26,8 +32,18 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.22</version>
 		</dependency>
-
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>6.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.novemberain</groupId>
+			<artifactId>quartz-mongodb</artifactId>
+			<version>2.0.0</version>
+		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>
@@ -40,6 +56,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
